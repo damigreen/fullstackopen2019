@@ -1,0 +1,9 @@
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+  "title": "Daft puk scroppys",
+  "arthur": "dr jiumigreht",
+  "url": "www.wikipedia/frdjajdi dr djfjd/AVM/",
+  "likes": 34
+}

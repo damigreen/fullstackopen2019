@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import personServices from './services/persons';
-// import Axios from 'axios';
 
 const Notification = ({message}) => {
   if (message === null) return null;
-  // const notficationStyle = {
-  //   color
-  // }
 
   return (
     <div className={message.type}>
@@ -53,12 +49,11 @@ const FormField = ({addPerson, newName, newNumber, handleNameChange, handleNumbe
   );
 };
 
-const PhonebookDisplay = ({ person, handleDelete}) => {
+const PhonebookDisplay = ({ person, handleDelete }) => {
   
   return (
     <div>
       <li>{person.name} {person.number} <button onClick={() => handleDelete(person)}>delete</button></li>
-      
     </div>
   );
 };
@@ -79,10 +74,6 @@ function App() {
       });
   });
   useEffect(hook, []);
-
-  // delete a person info from the database
-  // confirm deletion of the person before removing from the server
-  // udate the persons in the server with its state in the app.
 
   const handleDelete = person => {
     ;
@@ -124,8 +115,6 @@ function App() {
       event.target.value);
   };
 
-  // TODO
-  // fix this
   const addPerson = (event) => {
     event.preventDefault();
 
@@ -147,10 +136,9 @@ function App() {
               type: "success"
             });
           })
-          .catch((err) => {
-            console.log(err.response.data);
+          .catch((error) => {
             setMessage({ 
-              text: `Fail: ${newName} not added to phonebook`,
+              text: `Person validation failed: ${error.response.data.error}`,
               type: "fail"})
           });
       } else {
@@ -172,16 +160,13 @@ function App() {
               console.log(err.response.data)
               setMessage({ 
                 text: `${newName} has been deleted from the server`,
-                type: "fail"})
+                type: "failed"})
             });
-          setTimeout(() => {
-            setMessage(null)
-          }, 5000);
         };
       };
       setTimeout(() => {
         setMessage(null)
-      }, 5000);
+      }, 7000);
   };
 
   const useFilter = () => {
@@ -209,7 +194,6 @@ function App() {
         handleDelete={handleDelete} />
     );
   };
-
   
   const personsListDisp =  useFilter() ? filteredList() : personsList();
 
@@ -220,8 +204,6 @@ function App() {
         setPersons(returnedPersons);
       });
   }, [setPersons])
-
-
 
   return (
     <div>

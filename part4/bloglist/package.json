@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "nodemon index.js",
-    "tester": "jest --verbose",
-    "lint": "eslint ."
+    "watch": "cross-env NODE_ENV=development nodemon index.js",
+    "lint": "eslint .",
+    "tester": "cross-env NODE_ENV=test jest --verbose"
   },
   "repository": {
     "type": "git",
@@ -20,16 +20,26 @@
   "author": "damilola faseun",
   "license": "ISC",
   "devDependencies": {
+    "cross-env": "^7.0.0",
     "eslint": "^6.8.0",
     "eslint-plugin-react": "^7.18.3",
     "jest": "^25.1.0",
-    "nodemon": "^2.0.2"
+    "nodemon": "^2.0.2",
+    "supertest": "^4.0.2"
   },
   "dependencies": {
+    "bcrypt": "^3.0.8",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "mongoose": "^5.8.11"
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.9.2",
+    "mongoose-unique-validator": "^2.0.3"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "verbose": true,
+    "testTimeout": 30000
   }
 }

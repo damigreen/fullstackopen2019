@@ -20,7 +20,7 @@ const mostBlogs = (blogs) => {
   return blogs.reduce(function(author, blog) {
     let blogCount = authorsList[blog.author] || 0
     blogCount++
-    authorsList[blog.author] = blogCount
+    authorsList[blog.author] = blogCount;
     return (author.blogs || 0) > blogCount ? author : {author: blog.author, blogs: blogCount}
   }, {});
 };

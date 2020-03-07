@@ -75,6 +75,7 @@ function App() {
     console.log(`logging in with ${username}, ${password}`);
     try {
       const useR = await loginService.login({ username, password });
+      console.log(useR);
 
       blogService.setToken(useR.token);
       window.localStorage.setItem('loggedInUser', JSON.stringify(useR));
@@ -123,10 +124,6 @@ function App() {
       blog => (
         <Blog
           key={blog.key}
-          title={blog.title}
-          author={blog.author}
-          url={blog.url}
-          likes={blog.likes}
           blog={blog}
           blogs={blogs}
           setBlogs={setBlogs}
@@ -134,21 +131,25 @@ function App() {
       )
     );
 
+  if (user === null) {
+    return(
+      <div>
+        {loginForm()}
+      </div>
+    )
+  }
+
   return (
-    <div>
+    <div className="blogs">
       <Notification
         message={message} />
-
       <div>
-        {user === null ? loginForm() :
-          <div>
-            { `${user.name}, logged in` } <button onClick={() => handleLogout()}>logout</button>
-            {newBlogForm()}
-            <br />
-            {blogList()}
-          </div>
-        }
-      </div><br />
+        { `${user.name}, logged in` } <button onClick={() => handleLogout()}>logout</button>
+        {newBlogForm()}
+        <br />
+        {blogList()}
+      </div>
+      <br />
     </div>
   );
 }

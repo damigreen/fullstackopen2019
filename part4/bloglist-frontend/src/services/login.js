@@ -10,7 +10,6 @@ const login = async (credentials) => {
     url: baseUrl,
     data: credentials
   });
-  console.log(response.data);
   return response.data;
 };
 

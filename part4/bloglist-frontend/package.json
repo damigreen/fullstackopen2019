@@ -13,7 +13,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "eslint": "eslint ."
+    "eslint": "eslint .",
+    "start:server": "cd ..\\bloglist && npm run watch"
   },
   "eslintConfig": {
     "extends": [
@@ -85,6 +86,13 @@
   },
   "proxy": "http://localhost:3003",
   "devDependencies": {
+    "@testing-library/jest-dom": "^5.1.1",
+    "@testing-library/react": "^9.5.0",
     "eslint-plugin-jest": "^23.8.1"
+  },
+  "jest": {
+    "setupFiles": [
+      "<rootDir>/src/setupTests.js"
+    ]  
   }
 }

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import blogService from '../services/blogs';
 import propTypes from 'prop-types';
 
-const Blog = ({ blogs, setBlogs, blog, title, author, url, likes, user }) => {
+const Blog = ({ blogs, setBlogs, blog, user }) => {
   const [expanded, setExpanded] = useState(false);
 
   const blogStyle = {
@@ -31,9 +31,9 @@ const Blog = ({ blogs, setBlogs, blog, title, author, url, likes, user }) => {
   if (expanded) {
     return (
       <div className="blog" style={blogStyle}>
-        <li className='blog' onClick={ () => setExpanded(!expanded) }>{title}</li>
-        <li><a href={url}>{url}</a></li>
-        <li>{likes} <button onClick={addLike}>likes</button></li>
+        <li onClick={ () => setExpanded(!expanded) }>{ blog.title } { blog.author }</li>
+        <li><a href={blog.url}>{blog.url}</a></li>
+        <li>{blog.likes} <button onClick={addLike}>likes</button></li>
         <li>added by {blog.user.name}</li>
         { blog.user.username === user.username ? <li><button onClick={removeBlog}>remove</button></li> : null}
       </div>
@@ -42,19 +42,15 @@ const Blog = ({ blogs, setBlogs, blog, title, author, url, likes, user }) => {
 
   return (
     <div style={blogStyle} className="blog" onClick={ () => setExpanded(!expanded)}>
-      {title} {author}
+      {blog.title} {blog.author}
     </div>
   );
 };
 
-Blog.propTypes = { 
+Blog.propTypes = {
   blogs: propTypes.array.isRequired,
   setBlogs: propTypes.func.isRequired,
   blog: propTypes.object.isRequired,
-  title: propTypes.string.isRequired,
-  author: propTypes.string.isRequired,
-  url: propTypes.string.isRequired,
-  likes: propTypes.number.isRequired,
   user: propTypes.object.isRequired
 };
 

@@ -3,6 +3,7 @@ import blogService from '../services/blogs';
 import propTypes from 'prop-types';
 
 const Blog = ({ blogs, setBlogs, blog, user }) => {
+
   const [expanded, setExpanded] = useState(false);
 
   const blogStyle = {
@@ -35,7 +36,7 @@ const Blog = ({ blogs, setBlogs, blog, user }) => {
         <li><a href={blog.url}>{blog.url}</a></li>
         <li>{blog.likes} <button onClick={addLike}>likes</button></li>
         <li>added by {blog.user.name}</li>
-        { blog.user.username === user.username ? <li><button onClick={removeBlog}>remove</button></li> : null}
+        { blog.user.id === user._id ? <li><button onClick={removeBlog}>remove</button></li> : null}
       </div>
     );
   }

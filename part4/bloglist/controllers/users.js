@@ -29,12 +29,15 @@ userRouter.post('/', async (request, response, next) => {
       name: body.name,
       passwordHash
     });
+    console.log(user.id);
+
 
     const savedUser = await user.save();
     response.json(savedUser);
   } catch (exception) {
     next(exception);
   }
+
 });
 
 module.exports = userRouter;

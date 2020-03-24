@@ -5,12 +5,6 @@ import reducer from './reducer'
 
 const store = createStore(reducer)
 
-store.dispatch({
-  type: 'GOOD',
-  data: {
-  }
-})
-
 const App = () => {
   const good = () => {
     store.dispatch({
@@ -42,9 +36,9 @@ const App = () => {
       <button onClick={ok}>neutral</button>
       <button onClick={bad}>bad</button>
       <button onClick={clear}>reset stats</button>
-      <div>good {store.getState().good}</div>
-      <div>neutral {store.getState().ok}</div>
-      <div>bad {store.getState().bad}</div>
+      <div>good: {store.getState().good}</div>
+      <div>neutral: {store.getState().ok}</div>
+      <div>bad: {store.getState().bad}</div>
     </div>
   )
 }

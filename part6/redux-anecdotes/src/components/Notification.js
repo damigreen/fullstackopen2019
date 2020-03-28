@@ -12,7 +12,7 @@ const Notification = (props) => {
   
   return (
     <div style={style}>
-      render here notification...{props.message}
+      {props.message}
     </div>
   )
 }

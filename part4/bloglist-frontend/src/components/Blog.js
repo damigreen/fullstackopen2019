@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import blogService from '../services/blogs';
 import propTypes from 'prop-types';
 
-const Blog = ({ blogs, setBlogs, blog, user }) => {
+const Blog = ({ blogs, setBlogs, blog, user, setMessageWithTimer }) => {
   const [expanded, setExpanded] = useState(false);
 
   const blogStyle = {
@@ -25,6 +25,7 @@ const Blog = ({ blogs, setBlogs, blog, user }) => {
     if (window.confirm(`remove blog ${blog.name} by ${blog.author}`)) {
       await blogService.del(blog.id);
       setBlogs(blogs.filter(b => b.id !== blog.id));
+      setMessageWithTimer('blog removed')
     }
   };
 

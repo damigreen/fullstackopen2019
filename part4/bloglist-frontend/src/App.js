@@ -6,16 +6,17 @@ import loginService from './services/login';
 import Notification from './components/Notification';
 import NewBlog from './components/NewBlog';
 import Togglable from './components/Togglable';
+import useField  from './hooks/index';
 
 function App() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
   const [user, setUser] = useState(null);
   const [message, setMessage] = useState('');
   const [blogs, setBlogs] = useState([]);
-  const [newTitle, setNewTitle] = useState('');
-  const [newAuthor, setNewAuthor] = useState('');
-  const [newUrl, setNewUrl] = useState('');
+
+  const username = useField('text')
+  const password = useField('password')
+
+  const blogFormRef = React.createRef();
 
   useEffect( () => {
     const fetchData = async () => {
@@ -28,113 +29,51 @@ function App() {
   useEffect(() => {
     const loggedInUserJSON = window.localStorage.getItem('loggedInUser');
     if (loggedInUserJSON) {
-      const useR = JSON.parse(loggedInUserJSON);
-      setUser(useR);
-      blogService.setToken(useR.token);
+      const loginUser = JSON.parse(loggedInUserJSON);
+      setUser(loginUser);
+      blogService.setToken(loginUser.token);
     }
   }, []);
 
-  const blogFormRef = React.createRef();
-
-  const createBlog = async (event) => {
-    event.preventDefault();
-    const newBlog = {
-      title: newTitle,
-      author: newAuthor,
-      url: newUrl
-    };
-    try {
-      const returnedBlog = await blogService.create(newBlog);
-      setMessage(`new blog added: ${returnedBlog.title} by ${returnedBlog.author}`);
-      setTimeout(() => {
-        setMessage(null);
-      }, 5000);
-      console.log(returnedBlog);
-      console.log(user.name);
-      setBlogs(blogs.concat(returnedBlog));
-      setNewTitle('');
-      setNewAuthor('');
-      setNewUrl('');
-      console.log(returnedBlog.user);
-      console.log(user);
-    } catch (exception) {
-      setMessage('Validation error: please enter the required filed(s) ');
-      setTimeout(() => {
-        setMessage(null);
-      }, 5000);
-    }
-  };
+  const setMessageWithTimer = message => {
+    setMessage(message);
+    setTimeout(() => {
+      setMessage(null);
+    }, 5000);
+  }
 
   const handleLogout = () => {
     window.localStorage.removeItem('loggedInUser');
     setUser(null);
   };
 
-  const handleLogin = async (event) => {
+  const handleLogin = (event) => {
     event.preventDefault();
-    console.log(`logging in with ${username}, ${password}`);
+    console.log(`logging in with ${username.form.value}, ${password.form.value}`);
     try {
-      const useR = await loginService.login({ username, password });
-      console.log(useR);
+      loginService.login({ username: username.form.value, password: password.form.value })
+        .then(loginUser => {
+          setUser(loginUser);
+          setMessageWithTimer(`${loginUser.name} logged in`)
+          blogService.setToken(loginUser.token);
+          window.localStorage.setItem('loggedInUser', JSON.stringify(loginUser));
+        })
 
-      blogService.setToken(useR.token);
-      window.localStorage.setItem('loggedInUser', JSON.stringify(useR));
-
-      setUser(useR);
-      setUsername('');
-      setPassword('');
+      username.reset()
+      password.reset()
     } catch (exception) {
-      setMessage('Wrong credentials');
-      setTimeout(() => {
-        setMessage(null);
-      }, 5000);
+      setMessageWithTimer('Wrong credentials');
     }
   };
-
-  const loginForm = () => (
-    <div>
-      <h1>log in to application</h1>
-      <LoginForm
-        username={username}
-        password={password}
-        setUsername={ ({ target }) => setUsername(target.value) }
-        setPassword={ ({ target }) => setPassword(target.value)}
-        handleLogin={handleLogin} />
-    </div>
-  )
-
-  const newBlogForm = () => (
-    <div>
-      <Togglable buttonLabel='create new' ref={blogFormRef}>
-        <NewBlog
-          title={newTitle}
-          setTitle={ ({ target }) => setNewTitle(target.value) }
-          author={newAuthor}
-          setAuthor={ ({ target }) => setNewAuthor(target.value) }
-          url={newUrl}
-          setUrl={ ({ target }) => setNewUrl(target.value) }
-          handleSubmit={createBlog} />
-      </Togglable>
-    </div>
-  );
-
-  const blogList = () => blogs
-    .sort((a, b) => b.likes - a.likes)
-    .map(
-      blog => (
-        <Blog
-          key={blog.key}
-          blog={blog}
-          blogs={blogs}
-          setBlogs={setBlogs}
-          user={user} />
-      )
-    );
 
   if (user === null) {
     return(
       <div>
-        {loginForm()}
+        <h1>log in to application</h1>
+        <LoginForm
+          username={username.form}
+          password={password.form}
+          handleLogin={handleLogin} />
       </div>
     )
   }
@@ -142,12 +81,30 @@ function App() {
   return (
     <div className="blogs">
       <Notification
-        message={message} />
+        message={message} /> <button onClick={() => handleLogout()}>logout</button>
       <div>
-        { `${user.name}, logged in` } <button onClick={() => handleLogout()}>logout</button>
-        {newBlogForm()}
+        <h2>Blogs</h2>
+        <Togglable buttonLabel='create new' ref={blogFormRef}>
+          <NewBlog
+            user={user}
+            blogs={blogs}
+            setBlogs={setBlogs}
+            blogFormRef={blogFormRef}
+            setMessage={setMessageWithTimer} />
+        </Togglable>
         <br />
-        {blogList()}
+        {blogs
+          .sort((a, b) => b.likes - a.likes)
+          .map(
+            blog => (
+              <Blog
+                key={blog.key}
+                blog={blog}
+                blogs={blogs}
+                setBlogs={setBlogs}
+                user={user} />
+            )
+          )}
       </div>
       <br />
     </div>

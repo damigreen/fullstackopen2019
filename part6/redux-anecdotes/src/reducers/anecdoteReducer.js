@@ -1,61 +1,52 @@
-const anecdotesAtStart = [
-  'If it hurts, do it more often',
-  'Adding manpower to a late software project makes it later!',
-  'The first 90 percent of the code accounts for the first 90 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.',
-  'Any fool can write code that a computer can understand. Good programmers write code that humans can understand.',
-  'Premature optimization is the root of all evil.',
-  'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.'
-]
+import anecdoteService from '../services/anecdoteService'
 
-export const getId = () => (100000 * Math.random()).toFixed(0)
-
-export const vote = (id) => {
-  console.log('vote', id)
-  return {
-    type: "VOTE",
-    data: { id }
-  }
-}
-
-export const createAnecdote = (content) => {
-  return {
-    type: 'ADD_NEW',
-    data: {
-      content,
-      id: getId(),
-      votes: 0
-    }
-  }
-}
-
-const asObject = (anecdote) => {
-  return {
-    content: anecdote,
-    id: getId(),
-    votes: 0
-  }
-}
-
-const initialState = anecdotesAtStart.map(asObject)
-
-const anecdoteReducer = (state = initialState, action) => {
-  // console.log('state now: ', state)
-  // console.log('action', action)
+const anecdoteReducer = (state = [], action) => {
+  console.log('state now: ', state)
+  console.log('action', action)
 
   switch (action.type) {
-    case 'VOTE':
-      // find anecdote to vote for 
-      const id = action.data.id
-      const anecdoteToVote = state.find(n => id === n.id)
-      const anecdoteVoted = { ...anecdoteToVote, votes: anecdoteToVote.votes + 1 }
-      return state.map(anecdote => 
-        anecdote.id === id ? anecdoteVoted : anecdote
-      )
+    case 'VOTE_ANECDOTE':
+      const newAnecdote = action.data.updatedAnecdote
+      return state.map(a => a.id !== newAnecdote.id ? a : newAnecdote)
     case 'ADD_NEW':
-      return [...state, action.data]
+      return [...state, action.data.newAnecdote]
+    case 'INIT_ANECDOTES':
+      return action.data.anecdotes
     default:
       return state
   }
 }
+
+export const initialAnecdotes = () => {
+  return dispatch => {
+    anecdoteService.getAll()
+      .then(anecdotes => dispatch({
+        type: 'INIT_ANECDOTES',
+        data: { anecdotes }
+      }))
+  }
+}
+
+export const voteAnecdote = anecdote => {
+
+  return dispatch => {
+    anecdoteService.update({...anecdote, votes: anecdote.votes + 1})
+      .then(updatedAnecdote => dispatch({
+        type: "VOTE_ANECDOTE",
+        data: { updatedAnecdote }
+      }))
+  }
+}
+
+export const createAnecdote = (anecdote) => {
+  return dispatch => {
+    anecdoteService.createNew(anecdote)
+      .then(newAnecdote => dispatch({
+          type: 'ADD_NEW',
+          data: { newAnecdote }
+      }))
+  }
+}
+
 
 export default anecdoteReducer;

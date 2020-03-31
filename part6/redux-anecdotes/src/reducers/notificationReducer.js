@@ -1,14 +1,14 @@
 const initialState = null
 
 const notificationReducer = (state = initialState, action) => {
-  // console.log('action', action.type)
-  // console.log('state now: ', state)
+  console.log('action', action.type)
+  console.log('state now: ', state)
   // console.log(`${action.data}`)
 
 
   switch (action.type) {
     case 'SET_NOTIFICATION':
-      return action.data.message
+      return action.data
     case 'REMOVE_NOTIFICATION':
       return initialState
     default:
@@ -19,7 +19,7 @@ const notificationReducer = (state = initialState, action) => {
 export const setNotification = (message) => {
   return {
     type: 'SET_NOTIFICATION',
-    data: { message }
+    data: message
   }
 }
 

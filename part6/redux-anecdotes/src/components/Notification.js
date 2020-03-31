@@ -1,8 +1,9 @@
 import React from 'react'
-// import setNotification from '../reducers/notificationReducer'
+import { connect } from 'react-redux'
+// import { setNotification } from '../reducers/notificationReducer'
 
-const Notification = ({ store }) => {
-  console.log(store.getState())
+const Notification = (props) => {
+  console.log(props.message)
 
   const style = {
     border: 'solid',
@@ -11,9 +12,17 @@ const Notification = ({ store }) => {
   }
   return (
     <div style={style}>
-      render here notification...{store.getState().message}
+      render here notification...{props.message}
     </div>
   )
 }
 
-export default Notification
+const matchStateToProps = state => {
+  return {
+    message: state.message
+  }
+}
+
+export default connect(
+  matchStateToProps
+)(Notification) 

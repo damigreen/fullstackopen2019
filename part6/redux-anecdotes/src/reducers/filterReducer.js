@@ -1,8 +1,8 @@
 const initialState = null
 
 const filterReducer = (state = initialState, action) => {
-  console.log(`filterState:- ${state}`)
-  console.log(`action:- ${action.type}`)
+  // console.log(`filterState:- ${state}`)
+  // console.log(`action:- ${action.type}`)
 
   switch (action.type) {
     case 'SET_FILTER':
@@ -15,7 +15,7 @@ const filterReducer = (state = initialState, action) => {
 export const filterAnecdote = (text) => {
   return {
     type: 'SET_FILTER',
-    data: text 
+    data: text
   }
 }
 

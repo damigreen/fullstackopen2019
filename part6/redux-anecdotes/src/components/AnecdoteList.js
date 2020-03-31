@@ -1,36 +1,25 @@
 import React from 'react'
-import { vote } from '../reducers/anecdoteReducer'
+import { connect } from 'react-redux'
+import { voteAnecdote } from '../reducers/anecdoteReducer'
 
-const AnecdoteList = ({ store }) => {
-  console.log(store.getState().filter)
+const AnecdoteList = (props) => {
+  console.log(props.anecdotes)
 
-  const filterStore = store.getState().filter
-  const anecdotesStore = store.getState().anecdotes.sort((a, b) => b.votes - a.votes)
-  console.log(anecdotesStore)
-
-  const useFilter = () => {
-    if (filterStore === null) {
-      return true
-    }
+  const vote = anecdote => {
+    props.voteAnecdote(anecdote)
   }
-
-  const filterFunc = () => {
-    return anecdotesStore.filter(matches => matches.content.includes(filterStore))
-  }
-
-  const anecdotes = useFilter() ? anecdotesStore : filterFunc()
 
   return (
     <div>
       <h2>Anecdotes</h2>
-        {anecdotes.map(anecdote =>
+        {props.anecdotesList.map(anecdote =>
           <div key={anecdote.id}>
             <div>
               {anecdote.content}
             </div>
             <div>
               has {anecdote.votes}
-              <button onClick={() => store.dispatch(vote(anecdote.id))}>vote</button>
+              <button onClick={() => vote(anecdote)}>vote</button>
             </div>
           </div>
         )}
@@ -38,4 +27,23 @@ const AnecdoteList = ({ store }) => {
   )
 }
 
-export default AnecdoteList;
+  function anecdotesListCont({ filter, anecdotes }) {
+    return filter !== null ?
+    anecdotes.filter(matches => matches.content.includes(filter)) :
+    anecdotes.sort((a, b) => b.votes - a.votes)
+
+  }
+
+const matchStateToProps = state => {
+  return {
+    anecdotes: state.anecdotes,
+    filter: state.filter,
+    message: state.message,
+    anecdotesList: anecdotesListCont(state)
+  }
+}
+
+export default connect(
+  matchStateToProps,
+  { voteAnecdote }
+)(AnecdoteList);

@@ -18,7 +18,7 @@ function App() {
 
   const blogFormRef = React.createRef();
 
-  useEffect( () => {
+  useEffect(() => {
     const fetchData = async () => {
       const initialBlogs = await blogService.getAll();
       setBlogs(initialBlogs);
@@ -81,10 +81,9 @@ function App() {
   return (
     <div className="blogs">
       <Notification
-        message={message} />
+        message={message} /> <button onClick={() => handleLogout()}>logout</button>
       <div>
         <h2>Blogs</h2>
-        <button onClick={() => handleLogout()}>logout</button>
         <Togglable buttonLabel='create new' ref={blogFormRef}>
           <NewBlog
             user={user}

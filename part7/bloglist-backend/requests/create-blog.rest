@@ -1,0 +1,10 @@
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRhbWlyZWQiLCJpZCI6IjVlNTY1MTQ3OTkyNTdhMDUwNDZkMWE2OCIsImlhdCI6MTU4MjcxNTUwMX0.Jk-NiUDbW17qPc1oXIBRpr67ZZ9WCMk3c35tm1E0HXo
+
+{
+  "title": "How to hjdff sdd llraod",
+  "arthur": "gur jiokret",
+  "url": "www.playershandbook.com",
+  "likes": 3
+}

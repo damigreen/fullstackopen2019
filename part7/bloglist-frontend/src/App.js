@@ -1,68 +1,72 @@
 import React, { useState, useEffect } from 'react';
-import Blog from './components/Blog';
-import blogService from './services/blogs';
+import { connect } from 'react-redux'
+import userService from './services/users'
+
+import {
+  BrowserRouter as Router,
+  Route, Redirect, withRouter
+} from 'react-router-dom';
+
 import LoginForm from './components/LoginForm';
-import loginService from './services/login';
 import Notification from './components/Notification';
-import NewBlog from './components/NewBlog';
-import Togglable from './components/Togglable';
+import Users from './components/Users'
+import Menu from './components/Menu'
+import User from './components/User'
+import BlogInfo from './components/BlogInfo'
+import Togglable from './components/Togglable'
+import NewBlog from './components/NewBlog'
+import Blogs from './components/Blogs'
+
 import useField  from './hooks/index';
 
-function App() {
-  const [user, setUser] = useState(null);
-  const [message, setMessage] = useState('');
-  const [blogs, setBlogs] = useState([]);
+import { initialBlogs } from './reducers/blogReducer'
+import { login } from './reducers/userReducer'
+import { logout } from './reducers/userReducer'
+import { loginFromLocalStorage } from './reducers/userReducer'
+import { setNotification } from './reducers/notificationReducer'
 
+
+function App(props) {
+  const [users, setUsers] = useState([])
   const username = useField('text')
   const password = useField('password')
+  let user = props.user
+  let blogs = props.blogs
+
 
   const blogFormRef = React.createRef();
 
+  //  Load the initial blog list from the server
   useEffect( () => {
-    const fetchData = async () => {
-      const initialBlogs = await blogService.getAll();
-      setBlogs(initialBlogs);
-    };
-    fetchData();
+    props.initialBlogs()
+    props.loginFromLocalStorage()
   }, []);
 
   useEffect(() => {
-    const loggedInUserJSON = window.localStorage.getItem('loggedInUser');
-    if (loggedInUserJSON) {
-      const loginUser = JSON.parse(loggedInUserJSON);
-      setUser(loginUser);
-      blogService.setToken(loginUser.token);
+    const getUsers = () => {
+      userService.getAll()
+        .then(users => {
+          setUsers(users)
+        })
     }
+    getUsers()
   }, []);
 
-  const setMessageWithTimer = message => {
-    setMessage(message);
-    setTimeout(() => {
-      setMessage(null);
-    }, 5000);
-  }
-
-  const handleLogout = () => {
-    window.localStorage.removeItem('loggedInUser');
-    setUser(null);
-  };
+  // const handleLogout = () => {
+  //   window.localStorage.removeItem('loggedInUser');
+  //   props.logout()
+  // };
 
   const handleLogin = (event) => {
     event.preventDefault();
     console.log(`logging in with ${username.form.value}, ${password.form.value}`);
     try {
-      loginService.login({ username: username.form.value, password: password.form.value })
-        .then(loginUser => {
-          setUser(loginUser);
-          setMessageWithTimer(`${loginUser.name} logged in`)
-          blogService.setToken(loginUser.token);
-          window.localStorage.setItem('loggedInUser', JSON.stringify(loginUser));
-        })
-
+      props.login({ username: username.form.value, password: password.form.value })
+      props.setNotification(`login!!!!!!!!!!!!`)
       username.reset()
       password.reset()
     } catch (exception) {
-      setMessageWithTimer('Wrong credentials');
+      setNotification('Wrong credentials');
     }
   };
 
@@ -80,36 +84,53 @@ function App() {
 
   return (
     <div className="blogs">
-      <Notification
-        message={message} />
+      <Notification />
       <div>
-        <h2>Blogs</h2>
-        <button onClick={() => handleLogout()}>logout</button>
-        <Togglable buttonLabel='create new' ref={blogFormRef}>
-          <NewBlog
-            user={user}
-            blogs={blogs}
-            setBlogs={setBlogs}
-            blogFormRef={blogFormRef}
-            setMessage={setMessageWithTimer} />
-        </Togglable>
-        <br />
-        {blogs
-          .sort((a, b) => b.likes - a.likes)
-          .map(
-            blog => (
-              <Blog
-                key={blog.key}
-                blog={blog}
-                blogs={blogs}
-                setBlogs={setBlogs}
-                user={user} />
-            )
-          )}
+        <Router>
+          <Menu /><br />
+          {/* { user.name } is logged In  <button onClick={() => handleLogout()}>logout</button> */}
+          <Togglable buttonLabel='create new' ref={blogFormRef}>
+            <NewBlog
+              user={user}
+              blogFormRef={blogFormRef} />
+          </Togglable>
+          <Route exact path="/" render={() => (
+            <Blogs />
+          )} />
+          <Route exact path="/Users" render={() => 
+            <Users users={users}/>
+          } />
+          <Route exact path="/Users/:id" render={( { match } ) => 
+            <User user={users.find(u => u.id === match.params.id)} />
+          } />
+          <Route exact path="/Blogs/:id" render={( { match } ) => 
+            <BlogInfo blog={blogs.find(b => b.id === match.params.id)} />
+          } />
+        </Router>
       </div>
+      <br />
       <br />
     </div>
   );
 }
 
-export default App;
+const mapStateToProps = state => {
+  return {
+    user: state.user,
+    message: state.message,
+    blogs: state.blogs
+  }
+}
+
+const mapDispatchToProps = {
+  initialBlogs,
+  login,
+  logout,
+  loginFromLocalStorage,
+  setNotification
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App);

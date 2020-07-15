@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 
-/*
-*30:10:19
-*software engineering anecdotes
-*/
+
 const App = (props) => {
     const [selected, setSelected] = useState(0);
     const [votes, setVotes] = useState(new Array(6).fill(0));

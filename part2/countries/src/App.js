@@ -12,10 +12,14 @@ function App() {
         axios
             .get('https://restcountries.eu/rest/v2/all')
             .then((response) => {
+                console.log(response.data);
                 setCountries(response.data);
             });
     });
     useEffect(hook, []);
+
+    // const defaultCountry = countries.find(country => country.name === 'Nigeria');
+
 
     return (
         <div>

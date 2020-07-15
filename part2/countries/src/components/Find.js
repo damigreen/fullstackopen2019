@@ -19,9 +19,11 @@ const SearchBox = ({ countryName, setCountryName }) => {
     );
 };
 
-// this is used to render the search result for the matc=hed countries from the weather API
+// this is used to render the search result for the matched countries from the weather API
 //
 const ShowMatchDetails = ({ country }) => {
+    console.log(country);
+
     const [temp, setTemp] = useState(0);
     const [icon, setIcon] = useState('');
     const [wind, setWind] = useState('');
@@ -31,7 +33,6 @@ const ShowMatchDetails = ({ country }) => {
 
     // gets the weather information fo a particularmatch
     // makes a request to the openweather API for a particular city weather Information
-    //
     const weatherInfo = () => {
         const hook = (() => {
             axios
@@ -94,13 +95,18 @@ const ShowMatches = ({ country, setCountryName }) => (
     // returns a match fom the restcountries API
     // renders the mathes based on the number of matched countries found
 //
-const CountryDetails = ({ countries, countryName, setCountryName }) => {
+const CountryDetails = ({ countries = [], countryName, setCountryName }) => {
+    if (countryName === '') {
+        setCountryName('Nigeria');
+    }
+
     const matches = countries.filter(country =>
         country.name.toLowerCase().includes(countryName.toLowerCase()));
+
+
     if (matches.length === 1) {
         return <ShowMatchDetails country={matches[0]} />;
     } else if (matches.length <= 10) {
-        console.log(matches);
         return matches.map(country => (
             <ShowMatches key={country.name} country={country} setCountryName={setCountryName} />
             ));
@@ -109,13 +115,17 @@ const CountryDetails = ({ countries, countryName, setCountryName }) => {
 
 // A component that enables users search for a specific country
 // using a search keyword and a displayinglist of macthed result.
-//
 const Find = ({ countries, countryName, setCountryName }) => (
     <div>
         <SearchBox setCountryName={setCountryName} />
-        <CountryDetails countries={countries} countryName={countryName} setCountryName={setCountryName} />
+        <CountryDetails
+            countries={countries}
+            countryName={countryName}
+            setCountryName={setCountryName} />
     </div>
+
     );
+
 
 export default Find;
 

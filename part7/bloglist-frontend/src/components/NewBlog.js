@@ -1,8 +1,12 @@
 import React from 'react';
+import { connect } from 'react-redux'
 import useField from '../hooks/index'
-import blogService from '../services/blogs'
 
-const NewBlog = ({ blogs, setBlogs, setMessage, blogFormRef }) => {
+import { createBlog } from '../reducers/blogReducer'
+import { setNotification } from '../reducers/notificationReducer'
+
+
+const NewBlog = ({ setMessage, blogFormRef, ...props }) => {
   const newTitle = useField('text')
   const newAuthor = useField('text')
   const newUrl = useField('text')
@@ -15,23 +19,15 @@ const NewBlog = ({ blogs, setBlogs, setMessage, blogFormRef }) => {
       url: newUrl.form.value
     };
     try {
-      blogService.create(newBlog)
-        .then(returnedBlog => {
-          console.log(returnedBlog);
-          setMessage(`new blog added: ${returnedBlog.title} by ${returnedBlog.author}`);
-          setBlogs(blogs.concat(returnedBlog));
-        })
-
+      props.createBlog(newBlog)
+      props.setNotification(`new blog added: ${newBlog.title} by ${newBlog.author}`);
       blogFormRef.current.toggleVisibility()
 
       newTitle.reset()
       newAuthor.reset()
       newUrl.reset()
     } catch (exception) {
-      setMessage('Validation error: please enter the required filed(s) ');
-      setTimeout(() => {
-        setMessage(null);
-      }, 5000);
+      props.setNotification('Validation error: please enter the required filed(s) ');
     }
   };
 
@@ -57,4 +53,18 @@ const NewBlog = ({ blogs, setBlogs, setMessage, blogFormRef }) => {
   );
 };
 
-export default NewBlog;
+const mapStateToProps = state => {
+  return {
+    blogs: state.blogs
+  }
+}
+
+const mapDispatchToProps = {
+  createBlog,
+  setNotification
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(NewBlog);

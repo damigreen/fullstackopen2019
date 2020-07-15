@@ -1,6 +1,6 @@
-POST http://localhost:3003/api/blogs/5e834b660aec380e00638fda/comments
+POST http://localhost:3003/api/blogs/5e834be80aec380e00638fdb/comments
 Content-Type: application/json
 
 {
-  "comment": "a great read for all developers"
+  "comment": "Interesting post. I went through a similar thinking process and I ended up with the same result: an `id -> entity` map and then use `reselect` to create a model to satisfy my view requirements."
 }

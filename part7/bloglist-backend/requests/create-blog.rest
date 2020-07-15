@@ -1,10 +1,10 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRhbWlyZWQiLCJpZCI6IjVlNTY1MTQ3OTkyNTdhMDUwNDZkMWE2OCIsImlhdCI6MTU4MjcxNTUwMX0.Jk-NiUDbW17qPc1oXIBRpr67ZZ9WCMk3c35tm1E0HXo
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikh1bGtNYW4iLCJpZCI6IjVlZjdhNmMwNGMyMjIyMGY5NDI4NTBjMSIsImlhdCI6MTU5MzI4ODQ5OH0.UPZBzFnGD37K2fevTafHrf1g5yr7IoKcTUwZQhOziwk
 
 {
-  "title": "How to hjdff sdd llraod",
-  "arthur": "gur jiokret",
-  "url": "www.playershandbook.com",
+  "title": "Controlled and uncontrolled form inputs in React don't have to be complicated",
+  "arthur": "Gosha Arinik",
+  "url": "https://goshakkk.name/controlled-vs-uncontrolled-inputs-react/",
   "likes": 3
 }

@@ -13,8 +13,8 @@ function App() {
   const [message, setMessage] = useState('');
   const [blogs, setBlogs] = useState([]);
 
-  const username = useField('text')
   const password = useField('password')
+  const username = useField('text')
 
   const blogFormRef = React.createRef();
 

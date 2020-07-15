@@ -12,6 +12,18 @@ bloglistRouter.get('/', async (request, response, next) => {
   }
 });
 
+bloglistRouter.post('/:id/comments', async (request, response) => {
+  const body = request.body
+  console.log(body)
+
+  const blog = await Blog.findById(request.params.id)
+
+  blog.comments = blog.comments.concat(body.comment)
+  const savedBlog = await blog.save()
+
+  response.json(savedBlog.toJSON())
+})
+
 bloglistRouter.post('/', async (request, response, next) => {
   const body = request.body;
   const token = request.token;
@@ -77,7 +89,7 @@ bloglistRouter.delete('/:id', async (request, response, next) => {
 
     const user = await User.findById(decodedToken.id);
     const blog = await Blog.findById(blogId);
-   
+  
     if (blog.user.toString() !== user._id.toString()) {
       return response.status(401).json({ error: 'invalid user' });
     }

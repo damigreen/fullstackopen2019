@@ -1,4 +1,4 @@
-const { ApolloServer, gql } = require('apollo-server')
+const { ApolloServer, UserInputError, gql } = require('apollo-server')
 const { v4: uuidv4 } = require('uuid')
 
 
@@ -121,7 +121,6 @@ const typeDefs = gql`
       setBornTo: Int!
     ): Author
   }
-
 `
 
 const resolvers = {
@@ -143,7 +142,14 @@ const resolvers = {
   Author: {
     bookCount: (root) => {
       const book = books.find(b => b.author === root.name)
-      return book.genres.length
+      // var count = 0
+      // for (var i = 0; i < books.length; i++) {
+      //   if (root.name === books[i].author) {
+      //     count++;
+      //   }
+      // }
+      const count = books.filter(b => b.author === root.name).length
+      return count;
     }
   },
   Book: {
@@ -155,6 +161,11 @@ const resolvers = {
   },
   Mutation: {
     addBook: (root, args) => {
+      if (books.find(b => b.title === args.title)) {
+        throw new UserInputError('Book Title Must Be Unique!', {
+          invalidArgs: args.title
+        });
+      }
       let book = {...args, id: uuidv4()}
       books.push(book)
       authors.push({name: args.author, id: uuidv4()})

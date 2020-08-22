@@ -18,8 +18,6 @@ function App() {
     });
     useEffect(hook, []);
 
-    // const defaultCountry = countries.find(country => country.name === 'Nigeria');
-
 
     return (
         <div>

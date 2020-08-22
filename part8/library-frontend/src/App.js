@@ -110,6 +110,7 @@ const App = () => {
 
       <BirthYear
         editAuthor={editAuthor}
+        authors={ALL_AUTHORS}
         show={page === 'update'}
       />
 

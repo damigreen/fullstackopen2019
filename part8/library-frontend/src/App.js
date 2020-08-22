@@ -4,6 +4,7 @@ import { useQuery, useMutation } from '@apollo/react-hooks'
 import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
+import BirthYear from './components/BirthYear'
 
 const App = () => {
   const [page, setPage] = useState('authors')
@@ -91,6 +92,10 @@ const App = () => {
       <NewBook
         addBook={addBook}
         show={page === 'add'}
+      />
+
+      <BirthYear
+        
       />
 
     </div>

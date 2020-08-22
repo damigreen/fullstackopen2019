@@ -17,6 +17,7 @@ const App = () => {
     }, 10000);
   }
 
+
   const ALL_AUTHORS = gql`
     {
       allAuthors {
@@ -57,10 +58,22 @@ const App = () => {
       }
     }
   `
+  const EDIT_AUTHOR = gql`
+    mutation authorEdit($name: String!, $setBornTo: Int!) {
+      editAuthor(name: $name, setBornTo: $setBornTo) {
+        name
+        born
+      }
+    }
+  `
 
   const authors = useQuery(ALL_AUTHORS)
   const books = useQuery(ALL_BOOKS)
   const [addBook] =  useMutation(ADD_BOOK, {
+    onError: handleError,
+    refetchQueries: [{ query: ALL_AUTHORS }, { query: ALL_BOOKS }]
+  })
+  const [editAuthor] = useMutation(EDIT_AUTHOR, {
     onError: handleError,
     refetchQueries: [{ query: ALL_AUTHORS }, { query: ALL_BOOKS }]
   })
@@ -77,6 +90,7 @@ const App = () => {
         <button onClick={() => setPage('authors')}>authors</button>
         <button onClick={() => setPage('books')}>books</button>
         <button onClick={() => setPage('add')}>add book</button>
+        <button onClick={() => setPage('update')}>update</button>
       </div>
 
       <Authors
@@ -95,7 +109,8 @@ const App = () => {
       />
 
       <BirthYear
-        
+        editAuthor={editAuthor}
+        show={page === 'update'}
       />
 
     </div>

@@ -1,4 +1,4 @@
-const { ApolloServer, UserInputError, gql } = require('apollo-server')
+const { ApolloServer, UserInputError, ValidationError, gql } = require('apollo-server')
 // const { v4: uuidv4 } = require('uuid')
 const mongoose = require('mongoose')
 const Book = require('./models/book')
@@ -203,7 +203,13 @@ const resolvers = {
   //   }
   // },
   Mutation: {
-    addBook: async (root, args) => {
+    addBook: async (root, args, context) => {
+      const currentUser = context.currentUser
+      if (!currentUser) {
+        // Add a new book only when there is a user logedin
+        throw new ValidationError("not Validated");
+      }
+
       const bookInDB = await Book.findOne({title: args.title})
       if (bookInDB) {
         throw new UserInputError('Book title must be unique', {

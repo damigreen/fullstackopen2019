@@ -1,12 +1,15 @@
 const { ApolloServer, UserInputError, gql } = require('apollo-server')
-const { v4: uuidv4 } = require('uuid')
+// const { v4: uuidv4 } = require('uuid')
 const mongoose = require('mongoose')
 const Book = require('./models/book')
 const Author = require('./models/author')
 const User = require('./models/user')
+const jwt = require('jsonwebtoken')
 
 
 mongoose.set('useFindAndModify', false)
+
+const JWT_SECRET = "we are the world"
 
 const MONGODB_URI='mongodb+srv://damigreen:4444@cluster0-9junr.mongodb.net/book-store?retryWrites=true&w=majority'
 console.log('connecting to mongoDB')
@@ -237,7 +240,8 @@ const resolvers = {
       return updateAuthor;
     },
     createUser: async (root, args) => {
-      const userInDB = User.findOne({username: args.username})
+      const userInDB = await User.findOne({username: args.username})
+
       if (userInDB) {
         throw new UserInputError("username must be unique", {
           invalidArgs: args.username,
@@ -255,6 +259,21 @@ const resolvers = {
 
       return user
     },
+    login: async (root, args) => {
+      const user = User.findOne({ username: args.username })
+      if (!user || args.password !== 'secret') {
+        throw new UserInputError("Wrong Credentials", {
+          invalidArgs: args,
+        })
+      }
+
+      const userForToken = {
+        username: user.username,
+        id: user._id,
+      }
+
+      return { value: jwt.sign(userForToken, JWT_SECRET)}
+    }
   }
 }
 

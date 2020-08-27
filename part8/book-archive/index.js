@@ -146,8 +146,8 @@ const typeDefs = gql`
 `
 const resolvers = {
   Query: {
-    bookCount: () => books.length,
-    authorCount: () => authors.length,
+    bookCount: () => Book.collection.countDocuments,
+    authorCount: () => Author.collection.countDocuments,
     allBooks: async (root, args) => {
       // if (args.author) {
       //   return await Book.find({author: { $in: [args.author] }}).populate('author')

@@ -163,17 +163,24 @@ const resolvers = {
     allAuthors: () => Author.find({})
   },
   Author: {
-    bookCount: (root) => {
-      const book = books.find(b => b.author === root.name)
+    bookCount: async(root) => {
+      // const book = books.find(b => b.author === root.name)
       // var count = 0
       // for (var i = 0; i < books.length; i++) {
       //   if (root.name === books[i].author) {
       //     count++;
       //   }
       // }
-      // const book = Book.find
-      const count = books.filter(b => b.author === root.name).length
-      return count;
+  
+      const books = await Book.find({}).populate('author')
+      const count = books.reduce((acc, curr) => {
+        if (curr.author.name === root.name) {
+          return acc + 1
+        }
+        return acc;
+      }, 0)
+
+      return count
     }
   },
   // Book: {

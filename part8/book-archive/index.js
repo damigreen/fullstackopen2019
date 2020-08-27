@@ -177,7 +177,7 @@ const resolvers = {
 
       return Book.find({}).populate('author')
     },
-    allAuthors: () => Author.find({})
+    allAuthors: () => Author.find({}),
   },
   Author: {
     bookCount: async(root) => {
@@ -260,7 +260,7 @@ const resolvers = {
       return user
     },
     login: async (root, args) => {
-      const user = User.findOne({ username: args.username })
+      const user = await User.findOne({ username: args.username })
       if (!user || args.password !== 'secret') {
         throw new UserInputError("Wrong Credentials", {
           invalidArgs: args,
@@ -280,6 +280,18 @@ const resolvers = {
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  context: async ({req}) => {
+    const auth = req ? req.headers.authorization : null
+    if (auth && auth.toLocaleLowerCase().startsWith('bearer ')) {
+      const decodedToken = jwt.verify(auth.substring(7), JWT_SECRET)
+      // console.log(decodedToken)
+      // console.log(decodedToken.id)
+      const currentUser = await User.findById(decodedToken.id)
+      // console.log(currentUser)
+
+      return { currentUser }
+    }
+  }
 })
 
 server.listen().then(({ url }) => {

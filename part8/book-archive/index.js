@@ -178,6 +178,11 @@ const resolvers = {
       return Book.find({}).populate('author')
     },
     allAuthors: () => Author.find({}),
+    me: (root, args, context) => {
+      const currentUser = context.currentUser
+
+      return currentUser
+    },
   },
   Author: {
     bookCount: async(root) => {
@@ -190,7 +195,7 @@ const resolvers = {
       }, 0)
 
       return count
-    }
+    },
   },
   // Book: {
   //   author: (root) => {

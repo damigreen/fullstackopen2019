@@ -148,18 +148,14 @@ const resolvers = {
   Query: {
     bookCount: () => books.length,
     authorCount: () => authors.length,
-    allBooks: (root, args) => {
-      if (args.author) {
-        // return books.filter(b => b.author === args.author)
-        return Book.find({name: args.author})
-      }
+    allBooks: async (root, args) => {
+      // if (args.author) {
+      //   return await Book.find({author: { $in: [args.author] }}).populate('author')
+      // }
 
       if (args.genre) {
-        // let bookWithGenre = books.filter(book => book.genres.find(g => g === args.genre))
-        const bookWithGenre = Book.find({genres: args.genres})
-        console.log(bookWithGenre);
-        // return bookWithGenre
-        return
+        const booksWithGenre = await Book.find({ genres: { $in: [args.genre] }}).populate('author')
+        return booksWithGenre
       }
 
       return Book.find({}).populate('author')

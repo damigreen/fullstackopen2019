@@ -240,15 +240,30 @@ const resolvers = {
       }
       return book
     },
-    editAuthor: (root, args) => {
-      const author = authors.find(a => a.name === args.name)
-      if (!author) {
-        return null;
+    editAuthor: async (root, args, context) => {
+      const currentUser = context.currentUser
+      if (!currentUser) {
+        throw new ValidationError("Not Validated")
       }
 
-      const updateAuthor = { ...author, born: args.setBornTo };
-      authors = authors.map(a => a.name === args.name ? updateAuthor : a);
-      return updateAuthor;
+      const author = await Author.findOne({ name: args.name })
+
+      if (!author) {
+        throw new UserInputError("Author with name not found", {
+          invalidArgs: args,
+        })
+      }
+      
+      author.born = args.setBornTo
+      try {
+        await author.save()
+      } catch (error) {
+        throw new UserInputError(error.message, {
+          invalidArgs: args
+        })
+      }
+
+      return author
     },
     createUser: async (root, args) => {
       const userInDB = await User.findOne({username: args.username})
@@ -295,10 +310,7 @@ const server = new ApolloServer({
     const auth = req ? req.headers.authorization : null
     if (auth && auth.toLocaleLowerCase().startsWith('bearer ')) {
       const decodedToken = jwt.verify(auth.substring(7), JWT_SECRET)
-      // console.log(decodedToken)
-      // console.log(decodedToken.id)
       const currentUser = await User.findById(decodedToken.id)
-      // console.log(currentUser)
 
       return { currentUser }
     }

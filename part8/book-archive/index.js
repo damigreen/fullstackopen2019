@@ -1,8 +1,9 @@
 const { ApolloServer, UserInputError, gql } = require('apollo-server')
 const { v4: uuidv4 } = require('uuid')
 const mongoose = require('mongoose')
-const Book = require('./models/Book')
-const Author = require('./models/Author')
+const Book = require('./models/book')
+const Author = require('./models/author')
+const User = require('./models/user')
 
 
 mongoose.set('useFindAndModify', false)
@@ -177,14 +178,6 @@ const resolvers = {
   },
   Author: {
     bookCount: async(root) => {
-      // const book = books.find(b => b.author === root.name)
-      // var count = 0
-      // for (var i = 0; i < books.length; i++) {
-      //   if (root.name === books[i].author) {
-      //     count++;
-      //   }
-      // }
-  
       const books = await Book.find({}).populate('author')
       const count = books.reduce((acc, curr) => {
         if (curr.author.name === root.name) {
@@ -242,7 +235,26 @@ const resolvers = {
       const updateAuthor = { ...author, born: args.setBornTo };
       authors = authors.map(a => a.name === args.name ? updateAuthor : a);
       return updateAuthor;
-    }
+    },
+    createUser: async (root, args) => {
+      const userInDB = User.findOne({username: args.username})
+      if (userInDB) {
+        throw new UserInputError("username must be unique", {
+          invalidArgs: args.username,
+        })  
+      }
+      let user = await new User({...args})
+
+      try {
+        user = await user.save();  
+      } catch(error) {
+          throw new UserInputError(error.message, {
+          invalidArgs: args,
+        })
+      }
+
+      return user
+    },
   }
 }
 

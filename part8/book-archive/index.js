@@ -132,12 +132,6 @@ const typeDefs = gql`
       author: String!
       genres: [String!]!
     ): Book
-    addBookDB(
-      title: String!
-      published: Int!
-      author: String!
-      genres: [String!]!
-    ): Book
     editAuthor(
       name: String!
       setBornTo: Int!
@@ -189,19 +183,8 @@ const resolvers = {
   //   }
   // },
   Mutation: {
-    addBook: (root, args) => {
-      if (books.find(b => b.title === args.title)) {
-        throw new UserInputError('Book Title Must Be Unique!', {
-          invalidArgs: args.title
-        });
-      }
-      let book = {...args, id: uuidv4()}
-      books.push(book)
-      authors.push({name: args.author, id: uuidv4()})
-      return book
-    },
-    addBookDB: async (root, args) => {
-      const bookInDB = Book.findOne({title: args.title})
+    addBook: async (root, args) => {
+      const bookInDB = await Book.findOne({title: args.title})
       if (bookInDB) {
         throw new UserInputError('Book title must be unique', {
           invalidArgs: args.title

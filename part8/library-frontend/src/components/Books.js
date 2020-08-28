@@ -1,6 +1,19 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
+import { useQuery } from '@apollo/react-hooks'
+import Filter from '../components/Filter'
+import { ALL_BOOKS } from '../queries'
+
 
 const Books = (props) => {
+  const [books, setBooks] = useState([])
+  const result = useQuery(ALL_BOOKS)
+  
+  useEffect(() => {
+    if (!result.loading) {
+      setBooks(result.data.allBooks)
+    }
+  }, [result])
+  
   if (!props.show) {
     return null
   }
@@ -10,7 +23,6 @@ const Books = (props) => {
       <div>Loading...</div>
     )
   }
-  const books = props.result.data.allBooks
 
   return (
     <div>
@@ -36,6 +48,11 @@ const Books = (props) => {
           )}
         </tbody>
       </table>
+
+      <Filter
+        books={books}
+        setBooks={(books) => setBooks(books)}
+      />
     </div>
   )
 }

@@ -1,41 +1,27 @@
 import React, { useState, useEffect } from 'react'
-import { useQuery, useApolloClient } from '@apollo/react-hooks'
+import { useApolloClient } from '@apollo/react-hooks'
 import { BOOKS_BY_GENRE } from '../queries'
-import { ALL_BOOKS } from '../queries'
 
 
-function Filter(props) {
+function Filter({ setBooks, books }) {
   const [genre, setGenre] = useState('')
-  const [books, setBooks] = useState([])
   const [genres, setGenres] = useState([])
   const [bookFilterd, setBookFilterd] = useState([])
 
   const client = useApolloClient()
-  const result = useQuery(ALL_BOOKS)
 
   useEffect(() => {
-    setBooks(result.data.allBooks)
     if (genres.length === 0) {
       const genresDuplicated = books.reduce((acc, curr) => acc.concat(curr.genres), [])
       setGenres([...new Set(genresDuplicated)])
     }
-  }, [books, genres])
+  }, [genres])
+
 
   /* 
-  get all books
-  set the result from queriues in the react state
-  get all the available genres
-  display result based on button value  
-    set genre state based on button target
-  Display the genre in the state
+   TODO: Transfer the filter comonent to the Books components
   */
-
   const onFilter = async ({target}) => {
-    // const { data } = await booksQuery({
-    //   variables: { genre }
-    // })
-    // setbooks(data.allBooks)
-    // console.log(books)
     setGenre(target.value);
     
     const { data } = await client.query({
@@ -43,6 +29,7 @@ function Filter(props) {
       variables: { genre }
     })
     setBookFilterd(data.allBooks)
+    setBooks(bookFilterd)
   }
 
   

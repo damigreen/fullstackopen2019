@@ -56,3 +56,11 @@ mutation($username: String!, $password: String!) {
   }
 }
 `
+export const BOOKS_BY_GENRE =   gql`
+query allBooks($genre: String!) {
+  allBooks(genre: $genre) {
+    title
+    genres
+  }
+}
+`

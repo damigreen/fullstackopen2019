@@ -4,6 +4,8 @@ import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
 import BirthYear from './components/BirthYear'
+import LoginForm from './components/LoginForm'
+
 import { ALL_AUTHORS } from './queries'
 import { ALL_BOOKS } from './queries'
 import { ADD_BOOK } from './queries'
@@ -12,6 +14,8 @@ import { EDIT_AUTHOR } from './queries'
 const App = () => {
   const [page, setPage] = useState('authors')
   const [errorMessage, setErrorMessage] = useState(null)
+  const [token, setToken] = useState(null)
+
   
   const handleError = (error) => {
     setErrorMessage(error.graphQLErrors[0].message);
@@ -20,7 +24,18 @@ const App = () => {
     }, 10000);
   }
 
-
+  const Notify = ({ errorMessage }) => {
+    if ( !errorMessage ) {
+      return null
+    }
+  
+    return (
+      <div style={{color: 'red'}}>
+        {errorMessage}
+      </div>
+    )
+  }
+  
 
   const authors = useQuery(ALL_AUTHORS)
   const books = useQuery(ALL_BOOKS)
@@ -33,15 +48,41 @@ const App = () => {
     refetchQueries: [{ query: ALL_AUTHORS }, { query: ALL_BOOKS }]
   })
 
+  if (!token) {
+    return (
+      <div>
+        <Notify errorMessage={errorMessage}
+        />
+        <button onClick={() => setPage('authors')}>authors</button>
+        <button onClick={() => setPage('books')}>books</button>
+        <button onClick={() => setPage('login')}>login</button>
+
+        <Authors
+          result={authors}
+          show={page === 'authors'}
+        />
+    
+        <Books
+          result={books}
+          show={page === 'books'}
+        />
+        <LoginForm
+          show={page === 'login'}
+          setToken={(token) => setToken(token)}
+          handleError={handleError}
+          setPage={setPage}
+        />
+    
+      </div>
+    )
+  }
+
+
   return (
     <div>
       <div>
-        {errorMessage && 
-          <div style={{color: 'red'}}>
-            {errorMessage}
-          </div>
-        }
-
+        <Notify errorMessage={errorMessage}
+        />
         <button onClick={() => setPage('authors')}>authors</button>
         <button onClick={() => setPage('books')}>books</button>
         <button onClick={() => setPage('add')}>add book</button>
@@ -57,6 +98,7 @@ const App = () => {
         result={books}
         show={page === 'books'}
       />
+
 
       <NewBook
         addBook={addBook}

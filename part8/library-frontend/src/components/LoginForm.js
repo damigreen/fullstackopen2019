@@ -1,12 +1,42 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { LOGIN }  from '../queries'
+import { useMutation } from '@apollo/react-hooks'
 
-const LoginForm = (props: Props) => {
+
+const LoginForm = ({handleError, setToken, show, setPage}) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
+  const [login, result] = useMutation(LOGIN, {
+    onError: handleError
+  })
+
+  useEffect(() => {
+    if (result.data) {
+      console.log('-->', result.data)
+      const token = result.data.login.value
+      setToken(token)
+      localStorage.setItem('library-user-token', token)
+    }
+  }, [result.data])
+  
+  if (!show) {
+    return null
+  }
+  
+  const submit = (e) => {
+    e.preventDefault();
+
+    login({
+      variables: { username, password }
+    })
+    setPage('books')
+  }
+
+
   return (
     <div>
-      <form>
+      <form onSubmit={submit}>
         <div>
           <label for="username">Username</label>
           <input
@@ -18,6 +48,7 @@ const LoginForm = (props: Props) => {
           <label for="password">Password</label>
           <input
             value={password}
+            type="password"
             onChange={({target}) => setPassword(target.value)}
           />
         </div>

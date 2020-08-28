@@ -5,6 +5,7 @@ import Books from './components/Books'
 import NewBook from './components/NewBook'
 import BirthYear from './components/BirthYear'
 import LoginForm from './components/LoginForm'
+import Filter from './components/Filter'
 
 import { ALL_AUTHORS } from './queries'
 import { ALL_BOOKS } from './queries'
@@ -17,13 +18,26 @@ const App = () => {
   const [token, setToken] = useState(null)
 
   const client = useApolloClient();
-  
+
+
   const handleError = (error) => {
     setErrorMessage(error.graphQLErrors[0].message);
     setTimeout(() => {
       setErrorMessage(null)
     }, 10000);
   }
+
+  const authors = useQuery(ALL_AUTHORS)
+  const books = useQuery(ALL_BOOKS)
+  const [addBook] =  useMutation(ADD_BOOK, {
+    onError: handleError,
+    refetchQueries: [{ query: ALL_AUTHORS }, { query: ALL_BOOKS }]
+  })
+  const [editAuthor] = useMutation(EDIT_AUTHOR, {
+    onError: handleError,
+    refetchQueries: [{ query: ALL_AUTHORS }, { query: ALL_BOOKS }]
+  })
+
 
   const Notify = ({ errorMessage }) => {
     if ( !errorMessage ) {
@@ -36,18 +50,14 @@ const App = () => {
       </div>
     )
   }
-  
 
-  const authors = useQuery(ALL_AUTHORS)
-  const books = useQuery(ALL_BOOKS)
-  const [addBook] =  useMutation(ADD_BOOK, {
-    onError: handleError,
-    refetchQueries: [{ query: ALL_AUTHORS }, { query: ALL_BOOKS }]
-  })
-  const [editAuthor] = useMutation(EDIT_AUTHOR, {
-    onError: handleError,
-    refetchQueries: [{ query: ALL_AUTHORS }, { query: ALL_BOOKS }]
-  })
+  const logout = () => {
+    setToken(null)
+    localStorage.clear()
+    client.resetStore()
+    setPage('authors')
+  }
+
 
   if (!token) {
     return (
@@ -76,13 +86,6 @@ const App = () => {
     
       </div>
     )
-  }
-
-  const logout = () => {
-    setToken(null)
-    localStorage.clear()
-    client.resetStore()
-    setPage('authors')
   }
 
 
@@ -119,6 +122,7 @@ const App = () => {
         authors={ALL_AUTHORS}
         show={page === 'update'}
       />
+      <Filter />
 
     </div>
   )

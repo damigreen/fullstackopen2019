@@ -8,6 +8,7 @@ function Filter(props) {
   const [genre, setGenre] = useState('')
   const [books, setBooks] = useState([])
   const [genres, setGenres] = useState([])
+  const [bookFilterd, setBookFilterd] = useState([])
 
   const client = useApolloClient()
   const result = useQuery(ALL_BOOKS)
@@ -20,10 +21,6 @@ function Filter(props) {
     }
   }, [books, genres])
 
-  const genreButtons = genres.map(genre => (
-    <button value={genre} onClick={({ target }) => setGenre(target.value)}>{genre}</button>
-  ))
-
   /* 
   get all books
   set the result from queriues in the react state
@@ -32,24 +29,29 @@ function Filter(props) {
     set genre state based on button target
   Display the genre in the state
   */
-  const onFilter = async () => {
+
+  const onFilter = async ({target}) => {
     // const { data } = await booksQuery({
     //   variables: { genre }
     // })
     // setbooks(data.allBooks)
     // console.log(books)
-    const { data } = client.query({
+    setGenre(target.value);
+    
+    const { data } = await client.query({
       query: BOOKS_BY_GENRE,
       variables: { genre }
     })
+    setBookFilterd(data.allBooks)
   }
+
+  
+  const genreButtons = genres.map(genre => (
+    <button value={genre} onClick={onFilter}>{genre}</button>
+  ))
 
   return (
     <div>
-      {/* <button onClick={onFilter}>refactoring</button>
-      <button>design</button>
-      <button>design</button>
-      <button>Fiction</button> */}
       <div>
         {genreButtons}
       </div>

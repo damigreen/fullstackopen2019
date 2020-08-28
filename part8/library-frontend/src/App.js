@@ -5,7 +5,6 @@ import Books from './components/Books'
 import NewBook from './components/NewBook'
 import BirthYear from './components/BirthYear'
 import LoginForm from './components/LoginForm'
-import Filter from './components/Filter'
 
 import { ALL_AUTHORS } from './queries'
 import { ALL_BOOKS } from './queries'
@@ -122,8 +121,6 @@ const App = () => {
         authors={ALL_AUTHORS}
         show={page === 'update'}
       />
-      <Filter />
-
     </div>
   )
 }

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useQuery, useMutation } from '@apollo/react-hooks'
+import { useQuery, useMutation, useApolloClient } from '@apollo/react-hooks'
 import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
@@ -16,6 +16,7 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState(null)
   const [token, setToken] = useState(null)
 
+  const client = useApolloClient();
   
   const handleError = (error) => {
     setErrorMessage(error.graphQLErrors[0].message);
@@ -77,6 +78,13 @@ const App = () => {
     )
   }
 
+  const logout = () => {
+    setToken(null)
+    localStorage.clear()
+    client.resetStore()
+    setPage('authors')
+  }
+
 
   return (
     <div>
@@ -87,6 +95,7 @@ const App = () => {
         <button onClick={() => setPage('books')}>books</button>
         <button onClick={() => setPage('add')}>add book</button>
         <button onClick={() => setPage('update')}>update</button>
+        <button onClick={logout}>logout</button>
       </div>
 
       <Authors

@@ -73,7 +73,6 @@ const App = () => {
         />
     
         <Books
-          result={books}
           show={page === 'books'}
         />
         <LoginForm
@@ -81,8 +80,7 @@ const App = () => {
           setToken={(token) => setToken(token)}
           handleError={handleError}
           setPage={setPage}
-        />
-    
+        />    
       </div>
     )
   }

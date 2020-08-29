@@ -73,6 +73,7 @@ const App = () => {
         />
     
         <Books
+          token={token}
           show={page === 'books'}
         />
         <LoginForm
@@ -85,7 +86,7 @@ const App = () => {
     )
   }
 
-
+  console.log(token)
   return (
     <div>
       <div>
@@ -95,6 +96,7 @@ const App = () => {
         <button onClick={() => setPage('books')}>books</button>
         <button onClick={() => setPage('add')}>add book</button>
         <button onClick={() => setPage('update')}>update</button>
+        <button onClick={() => setPage('recommend')}>recommend</button>
         <button onClick={logout}>logout</button>
       </div>
 

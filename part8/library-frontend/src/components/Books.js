@@ -7,32 +7,38 @@ import { BOOKS_BY_GENRE } from '../queries'
 
 const Books = (props) => {
   const [books, setBooks] = useState([])
-  const [genre, setGenre] = useState('')
+  const [genre, setGenre] = useState('all')
   const [genres, setGenres] = useState([])
   const result = useQuery(ALL_BOOKS)
 
   const client = useApolloClient()
 
   const filterBooks = async (genre) => {
-    const { data } = await client.query({
-      query: BOOKS_BY_GENRE,
-      variables: { genre }
-    })
-    setBooks(data.allBooks)
+    try {
+      const { data } = await client.query({
+        query: BOOKS_BY_GENRE,
+        variables: { genre }
+      })
+      setBooks(data.allBooks)
+      
+    } catch(error) {
+      console.log('error', error);
+    }
   }
 
   useEffect(() => {
-    if (result.data) {  
+    if (!result.loading && genre === 'all') { 
       setBooks(result.data.allBooks)
       if (genres.length === 0) {
         const genresDuplicated = books.reduce((acc, curr) => acc.concat(curr.genres), [])
         setGenres([...new Set(genresDuplicated)])
       }
+      return;
     }
     filterBooks(genre)
-  }, [result, genre, genres, books])
-
+  }, [genres, genre, books, filterBooks, result])
   
+  console.log(genres)
   if (!props.show) {
     return null
   }
@@ -40,15 +46,15 @@ const Books = (props) => {
   if (result.loading) {
     return (
       <div>Loading...</div>
-    )
+      )
   }
-
+  
   const genreButtons = genres.map(genre => (
     <button value={genre} onClick={({target}) => setGenre(target.value)}>{genre}</button>
-  ))
-
-  return (
-    <div>
+    ))
+    
+    return (
+      <div>
       <h2>books</h2>
 
       <table>
@@ -72,6 +78,7 @@ const Books = (props) => {
         </tbody>
       </table>
       <div>
+        <button value='all' onClick={({target}) => setGenre(target.value)}>all genre</button>
         {genreButtons}
       </div>
     </div>

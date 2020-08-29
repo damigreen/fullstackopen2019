@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useQuery, useApolloClient } from '@apollo/react-hooks'
 import { ALL_BOOKS } from '../queries'
 import { BOOKS_BY_GENRE } from '../queries'
+import { ME } from '../queries'
 
 
 
@@ -9,8 +10,9 @@ const Books = (props) => {
   const [books, setBooks] = useState([])
   const [genre, setGenre] = useState('all')
   const [genres, setGenres] = useState([])
-  const result = useQuery(ALL_BOOKS)
+  const [fav, setFav] = useState([])
 
+  const result = useQuery(ALL_BOOKS)
   const client = useApolloClient()
 
   const filterBooks = async (genre) => {
@@ -26,6 +28,19 @@ const Books = (props) => {
     }
   }
 
+  const setFavorite = async () => {
+    console.log('setting fav')
+    try {
+      const { data } = await client.query({
+        query: ME
+      })
+      setFav(data.me.username);
+      console.log(data)
+    } catch(error) {
+      console.log('error', error)
+    }
+  }
+
   useEffect(() => {
     if (!result.loading && genre === 'all') { 
       setBooks(result.data.allBooks)
@@ -36,9 +51,11 @@ const Books = (props) => {
       return;
     }
     filterBooks(genre)
+    if (props.token) {
+      setFavorite(genre)
+    }
   }, [genres, genre, books, filterBooks, result])
   
-  console.log(genres)
   if (!props.show) {
     return null
   }

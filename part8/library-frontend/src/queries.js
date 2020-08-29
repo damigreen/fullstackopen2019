@@ -68,3 +68,8 @@ query allBooks($genre: String!) {
   }
 }
 `
+export const ME = gql`
+query me {
+  username
+}
+`

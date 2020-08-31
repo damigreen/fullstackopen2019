@@ -8,12 +8,14 @@
     "apollo-client": "^2.6.10",
     "apollo-link": "^1.2.14",
     "apollo-link-context": "^1.0.20",
+    "apollo-link-ws": "^1.0.20",
     "graphql": "^14.3.1",
     "react": "^16.8.6",
     "react-apollo": "^3.1.5",
     "react-dom": "^16.8.6",
     "react-scripts": "3.0.1",
-    "react-select": "^3.1.0"
+    "react-select": "^3.1.0",
+    "subscriptions-transport-ws": "^0.9.18"
   },
   "scripts": {
     "start": "react-scripts start",

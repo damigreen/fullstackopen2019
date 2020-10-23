@@ -1,6 +1,26 @@
+interface argumentValues {
+  weight: number;
+  height: number;
+}
+
+const parseArgument = (args: Array<string>): argumentValues => {
+  if (args.length < 4) throw new Error('Please include your weight and height')
+  if (args.length > 4) throw new Error('Too many arguments entered')
+
+  if (!isNaN(Number(args[2])) && !isNaN(Number(args[3]))) {
+    return {
+      weight: Number(args[2]),
+      height: Number(args[3]),
+    }
+  }
+
+}
+
 const bmiCalculator = (weight: number, height: number): string => {
   const heightInMeters = height / 100;
   const bmiValue = weight / heightInMeters ** 2;
+
+  console.log(bmiValue);
 
   if (isNaN(Number(weight)) && isNaN(Number(height))) {
     return 'Weight and Height should be a number!';
@@ -18,7 +38,8 @@ const bmiCalculator = (weight: number, height: number): string => {
 }
 
 try {
-  console.log(bmiCalculator(180, 74));
+  const { weight, height } = parseArgument(process.argv)
+  console.log(bmiCalculator(weight, height));
 } catch(e) {
   console.log('Something was wrong', e.message);
 }

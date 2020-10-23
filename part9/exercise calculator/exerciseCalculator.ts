@@ -8,7 +8,28 @@ interface exerciseResult {
   average: number;
 }
 
-const exerciseCalculator = (args: number[], target: number): exerciseResult => {
+interface exerciseArgs {
+  target: number;
+  noOfDays: Array<number>;
+}
+
+const parseArguments = (args: Array<string>): exerciseArgs => {
+  if (args.length < 4) throw new Error('Not enough arguments');
+
+  var arr = [];
+  for (var i = 0; i < args.length; i++) {
+    if ((i > 2) && !isNaN(Number(args[i]))) {
+      arr.push(Number(args[i]));
+    }
+  }
+
+  return {
+    target: Number(args[2]),
+    noOfDays: arr,
+  }
+}
+
+const exerciseCalculator = (target: number, args: number[]): exerciseResult => {
 
   const daysTraining = function() {
     var i = 0;
@@ -21,7 +42,7 @@ const exerciseCalculator = (args: number[], target: number): exerciseResult => {
 
   const performance = () => {
 
-     if (noOfDays < 4) {
+     if (noOfDays < args.length / 2) {
        return false;
      } else return true;
   }
@@ -63,5 +84,10 @@ const exerciseCalculator = (args: number[], target: number): exerciseResult => {
   }
 }
 
-console.log(exerciseCalculator([3, 0, 2, 4.5, 0, 3, 1], 2));
-console.log(exerciseCalculator([0, 0, 2, 4.5, 0, 0, 1], 2));
+
+try {
+  const { target, noOfDays } = parseArguments(process.argv);
+  console.log(exerciseCalculator(target, noOfDays))
+} catch(e) {
+  console.log('Error happende', e.message);
+}

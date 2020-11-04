@@ -1,4 +1,6 @@
-[
+import { DiagnosesEntry } from '../src/types';
+
+const diagnosesEntries: Array<DiagnosesEntry> = [
   {
     "code": "M24.2",
     "name": "Disorder of ligament",
@@ -77,3 +79,5 @@
     "latin": "Alia retinopathia proliferativa"
   }
 ]
+
+export default diagnosesEntries;

@@ -1,6 +1,6 @@
 // import express from 'express';
 
-import diagnosesData from '../../data/diagnoses.json';
+import diagnosesData from '../../data/diagnoses';
 import { DiagnosesEntry } from '../types';
 
 const diagnoses: Array<DiagnosesEntry> = diagnosesData;

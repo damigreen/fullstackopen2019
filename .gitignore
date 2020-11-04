@@ -4,17 +4,26 @@ part1/unicafe/node_modules/
 part1/unicafe/srcExclude/
 part1/course-content/node_modules/
 part1/course information/
+
 part2/countries/node_modules/
 part2/phonebook/node_modules/
 part2/phonebook-backend/node_modules/
 part2/phonebook-backend/index1.js
 part2/phonebook-backend/index2.js
 part2/phonebook-backend/mongo-test.js
+
 part4/bloglist/node_modules/
+
 part7/bloglist-backend/node_modules/
 part7/bloglist-frontend/node_modules/
 part7/bloglist-frontend/console.js/
+
 part8/book-archive/node_modules/
 part8/library-frontend/node_modules/
+
+part9/bmi calculator/node_modules/
+part9/exercise calculator/node_modules/
+part9/patientor app/backend/node_modules/
+part9/patientor app/patientor/node_modules/
 
 t3st/

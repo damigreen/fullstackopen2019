@@ -29,7 +29,7 @@ const parseArguments = (args: Array<string>): exerciseArgs => {
   }
 }
 
-const exerciseCalculator = (target: number, args: number[]): exerciseResult => {
+export const exerciseCalculator = (target: number, args: number[]): exerciseResult => {
 
   const daysTraining = function() {
     var i = 0;

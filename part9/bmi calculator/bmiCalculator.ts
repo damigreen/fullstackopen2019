@@ -13,14 +13,11 @@ const parseArgument = (args: Array<string>): argumentValues => {
       height: Number(args[3]),
     }
   }
-
 }
 
-const bmiCalculator = (weight: number, height: number): string => {
+export const bmiCalculator = (weight: number, height: number): string => {
   const heightInMeters = height / 100;
-  const bmiValue = weight / heightInMeters ** 2;
-
-  console.log(bmiValue);
+  let bmiValue = weight / heightInMeters ** 2;
 
   if (isNaN(Number(weight)) && isNaN(Number(height))) {
     return 'Weight and Height should be a number!';
@@ -29,7 +26,7 @@ const bmiCalculator = (weight: number, height: number): string => {
   if (bmiValue <= 18.5) {
     return 'Underweight'
   } else if ((bmiValue >= 18.5) && (bmiValue < 24.9)) {
-    return 'Normal (healthy wright)'
+    return 'Normal (healthy weight)'
   } else if ((bmiValue >= 25) && (bmiValue < 30)) {
     return 'Overweight';
   } else if ((bmiValue >= 30)) {

@@ -1,5 +1,6 @@
 import express from 'express';
 import diagnosesRouter from './routes/diagnoses';
+import patientRouter from './routes/patients'
 
 const app = express();
 
@@ -10,6 +11,7 @@ app.get('/ping', (_req, res) => {
 });
 
 app.use('/diagnoses', diagnosesRouter);
+app.use('/patients', patientRouter);
 
 const PORT = 3002;
 

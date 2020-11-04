@@ -1,4 +1,6 @@
 import express from 'express';
+import diagnosesRouter from './routes/diagnoses';
+
 const app = express();
 
 app.use(express.static('build'));
@@ -7,9 +9,7 @@ app.get('/ping', (_req, res) => {
   res.send('PONG----------------------------------');
 });
 
-app.get('/diagnoses', (_req, res) => {
-  res.send('Getting diagnoses-----------')
-});
+app.use('/diagnoses', diagnosesRouter);
 
 const PORT = 3002;
 

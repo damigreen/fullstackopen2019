@@ -4,8 +4,9 @@ import patientServices from '../services/patientServices'
 const patientRouter = express.Router();
 
 patientRouter.get('/', (_req, res) => {
-  // res.send('Getting patients data::================');
-  res.send(patientServices.getPatientsEntry());
+  // res.send(patientServices.getPatientsEntry());
+  // res.send(patientServices.getPatientsEntry());
+  res.send(patientServices.getNonSensitivePatientsEntry());
 });
 
 export default patientRouter;

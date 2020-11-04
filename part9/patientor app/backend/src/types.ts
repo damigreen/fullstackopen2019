@@ -6,7 +6,7 @@ export interface DiagnosesEntry {
   latin?: string;
 };
 
-export interface Patient {
+export interface PatientsEntry {
   id: string;
   name: string;
   dateOfBirth: string;

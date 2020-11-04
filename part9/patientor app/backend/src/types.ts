@@ -16,3 +16,4 @@ export interface PatientsEntry {
 };
 
 export type NonSensitiveDiagnosesEntry  = Omit<DiagnosesEntry, 'latin'>;
+export type NonSensitivePatientsEntry  = Omit<PatientsEntry, 'ssn'>;

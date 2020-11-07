@@ -2,11 +2,14 @@ import express from 'express';
 import diagnosesRouter from './routes/diagnoses';
 import patientRouter from './routes/patients'
 import cors from 'cors';
+import bodyParser from 'body-parser';
 
 const app = express();
 
 app.use(express.static('build'));
+app.use(express.json());
 app.use(cors());
+app.use(bodyParser.json());
 
 app.get('/ping', (_req, res) => {
   res.send('PONG----------------------------------');

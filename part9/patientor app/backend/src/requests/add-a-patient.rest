@@ -2,9 +2,9 @@ POST http://localhost:3001/api/patients
 Content-Type: application/json
 
 {
-    "name": "Johnny Depp",
-    "dateOfBirth": "1980-02-19",
-    "ssn": "994886-122X",
+    "name": "Wwabi parker",
+    "dateOfBirth": "1930-09-29",
+    "ssn": "992891-122X",
     "gender": "male",
-    "occupation": "Actor"
+    "occupation": "Fashion Designer"
 }

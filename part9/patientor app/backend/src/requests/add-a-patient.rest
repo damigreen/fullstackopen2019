@@ -1,0 +1,10 @@
+POST http://localhost:3001/api/patients
+Content-Type: application/json
+
+{
+    "name": "Johnny Depp",
+    "dateOfBirth": "1980-02-19",
+    "ssn": "994886-122X",
+    "gender": "male",
+    "occupation": "Actor"
+}

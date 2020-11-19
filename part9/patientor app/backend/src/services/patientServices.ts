@@ -24,7 +24,6 @@ const addPatient = (entry: NewPatientsEntry): PatientsEntry => {
     id: uuidv4(),
     ...entry
   };
-  console.log(newPatientEntry);
 
   patients.push(newPatientEntry);
   return newPatientEntry;

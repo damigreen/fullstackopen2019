@@ -1,10 +1,14 @@
 import React from 'react';
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  name: string
+}
+
+const Header: React.FC<HeaderProps> = (props) => {
 
   return (
     <div>
-      <h1>Header Component</h1>
+      <h1>Header Component {props.name}</h1>
     </div>
   )
 }
